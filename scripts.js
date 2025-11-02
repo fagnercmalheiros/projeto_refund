@@ -13,7 +13,7 @@ amount.oninput = () => {
     //console.log(value)
 
     //transforma o valor em centavos(Ex.: 150/100 = 1.5)
-    value = Number(value) /100
+    value = Number(value) / 100
 
     //retorno para a variável
     amount.value = formatCurrencyBRL(value)
@@ -21,8 +21,8 @@ amount.oninput = () => {
 
 //formata valor na moeda brasileira
 
-function formatCurrencyBRL(value){
-    value = value.toLocaleString("pt-Br",{
+function formatCurrencyBRL(value) {
+    value = value.toLocaleString("pt-Br", {
         style: "currency",
         currency: "BRL"
     })
@@ -30,43 +30,63 @@ function formatCurrencyBRL(value){
 }
 
 //captura evento de subimit do form
-form,onsubmit = (event) => {
-//previne comport. de att automatica
-event.preventDefault()
+form, onsubmit = (event) => {
+    //previne comport. de att automatica
+    event.preventDefault()
 
-//cria objeto detalhado da nova despesa
+    //cria objeto detalhado da nova despesa
 
-const newExpense = {
-    id: new Date().getTime(),
-    expense: expense.value,
-    category_id: category.value,
-    category_name: category.options[category.selectedIndex].text,
-    amount: amount.value,
-    created_at: new Date()
-}
+    const newExpense = {
+        id: new Date().getTime(),
+        expense: expense.value,
+        category_id: category.value,
+        category_name: category.options[category.selectedIndex].text,
+        amount: amount.value,
+        created_at: new Date()
+    }
 
-expenseAdd(newExpense)
+    expenseAdd(newExpense)
 }
 
 // adição dos itens na lista
 
 function expenseAdd(newExpense) {
-// cria elemento para add na lista
-const expenseItem = document.createElement("li")
-expenseItem.classList.add("expense")
+    try {
+        // cria elemento para add na lista
+        const expenseItem = document.createElement("li")
+        expenseItem.classList.add("expense")
 
-//crindo o icone da categoria
+        //crindo o icone da categoria
 
-const expenseIcon = document.createElement("img")
-expenseIcon.setAttribute("src",`img/${newExpense.category_id}.svg`)
-expenseIcon.setAttribute("alt", newExpense.category_name)
+        const expenseIcon = document.createElement("img")
+        expenseIcon.setAttribute("src", `img/${newExpense.category_id}.svg`)
+        expenseIcon.setAttribute("alt", newExpense.category_name)
 
-//add info do item
-expenseItem.append(expenseIcon)
+        //criando a info da despesa
+        const expenseInfo = document.createElement("div")
+        expenseInfo.classList.add("expense-info")
 
-//add itens na lista
-expenseList.append(expenseItem)
+        //criando nome da desp
+        const expenseName = document.createElement("strong")
+        expenseName.textContent = newExpense.expense
 
+        //criando a categoria da despesa
+        const expenseCategory = document.creatElement("span")
+        expenseCategory.textContent = newExpense.category_name
+
+        // add nome e categoria na div, atens do item
+        expenseInfo.append(expenseName, expenseCategory)
+
+        //add info do item
+        expenseItem.append(expenseIcon, expenseInfo)
+
+        //add itens na lista
+        expenseList.append(expenseItem)
+
+    } catch (error) {
+        alert('Não foi possível atualizar a lista de despesa')
+        console.log(error)
+    }
 
 
 }
