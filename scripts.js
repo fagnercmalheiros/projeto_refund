@@ -5,6 +5,11 @@ const expense = document.getElementById("expense")
 const category = document.getElementById("category")
 const expenseList = document.querySelector("ul")
 
+
+//seleciona elementos de totais
+const expenseQuantity = document.querySelector("aside header p span")
+const expenseTotal = document.querySelector("aside header h2")
+
 //CAPTURA DO EVENTO E FORMATAR O VALOR
 
 amount.oninput = () => {
@@ -77,16 +82,65 @@ function expenseAdd(newExpense) {
         // add nome e categoria na div, atens do item
         expenseInfo.append(expenseName, expenseCategory)
 
+
+        //add o valor
+        const expenseAmount = document.createElement("span")
+        expenseAmount.classList.add("expense-amount")
+        expenseAmount.innerHTML = `<small>R$</small> ${newExpense.amount.replace("R$","")}`
+
+        //add icone de remover
+
+        const removeIcon = document.creatElement("img")
+        removeIcon.classList.add("remove-icon")
+        removeIcon.setAttribute("src","img/remove.svg")
+        removeIcon.setAttribute("alt","remover")
+
+
         //add info do item
-        expenseItem.append(expenseIcon, expenseInfo)
+        expenseItem.append(expenseIcon, expenseInfo, expenseAmount,removeIcon)
 
         //add itens na lista
         expenseList.append(expenseItem)
+
+        // chama a atualização de totais
+        updateTotals()
 
     } catch (error) {
         alert('Não foi possível atualizar a lista de despesa')
         console.log(error)
     }
+}
 
+function updateTotals(){
+    try {
+        //recuperar todos os itens (li) da lista (ul)
+        const items = expenseList.children
+        //console.log(items)
 
+        //atualiza a quant de itens
+        expenseQuantity.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`
+
+        //variável para incremetar total
+        let total = 0
+
+        //percorrer cada item (li)
+        for(let item = 0; item < items.length; item++){
+            //percorre cada item(li) e busca somente a classe expense-amount
+            const itemAmount = items[item].querySelector(".expense-amount")
+            console.log(itemAmount)
+
+            // coleta somente o valor
+            const value = itemAmount.textContent.replace(/[^\d,]/g, "").replace(",",".")
+
+            //converter o valor para float
+            const valueFormatted = parseFloat(value)
+
+            //verificar se é um número
+
+        }
+
+    } catch (error) {
+        console.log(error)
+        alert('Não foi possível atualizar os valores')
+    }
 }
