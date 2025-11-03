@@ -105,6 +105,9 @@ function expenseAdd(newExpense) {
         // chama a atualização de totais
         updateTotals()
 
+        //limpa o form
+        formClear()
+
     } catch (error) {
         alert('Não foi possível atualizar a lista de despesa')
         console.log(error)
@@ -136,11 +139,51 @@ function updateTotals(){
             const valueFormatted = parseFloat(value)
 
             //verificar se é um número
+            if(isNaN(valueFormatted)){
+                return alert('Não foi possível calcular o total. O valor não parece ser um número.')
+            }
 
+            //incremet valor total
+            total += valueFormatted // total = total + valueFormatted
         }
+
+        //expenseTotal.textContent = total
+        //expenseTotal.innerHTML = `<small>R$</small> ${String(total).replace(".",",")}`
+        
+        const symbolBRL = document.createElement("small")
+        symbolBRL.textContent = "R$"
+
+        total = formatCurrencyBRL(total).replace("R$","")
+        expenseTotal.innerHTML = " "
+        expenseTotal.append(symbolBRL, total)
+
+        
+        // expenseTotal.innerHTML = "<small>R$</small>"
+        // expenseTotal.append(total)
 
     } catch (error) {
         console.log(error)
         alert('Não foi possível atualizar os valores')
     }
 }
+
+
+expenseList.addEventListener("click", function(event){
+    if(event.target.classList.contains("remove-icon")){
+        //console.log(event)
+        //obter a lista pai do elemento clicando
+        const item = event.target.closest(".expense")
+        item.remove()
+    }
+
+    updateTotals()
+})
+
+
+function formClear(){
+    expense.value = ""
+    category.value = ""
+    amount.value = ""
+}
+
+
